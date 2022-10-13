@@ -164,10 +164,13 @@ class Leaderboard(commands.Cog):
             if config['separate_servers']:
                 for i in myplayers:
                     dailychannel = None
-                    serverid = i
+                    serverid = str(i)
                     if serverid in config['daily_channels']:
                         dailychannel = self.client.get_channel(config['daily_channels'][serverid])
-                    embed = discord.Embed(title=f"{config['daily_title']} [past day]", color=0x00FF00)
+                    daily_title = None
+                    if serverid in config['daily_title']:
+                        daily_title = config['daily_title'][serverid]
+                    embed = discord.Embed(title=f"{daily_title} [past day]", color=0x00FF00)
                     for p in myplayers[i]:
                         if leaderboardspot == 1:
                             if myplayers[i][p]['bmid'] > 0:
@@ -264,8 +267,11 @@ class Leaderboard(commands.Cog):
                     if dailychannel:
                         await dailychannel.send(embed=embed)
             else:
-                dailychannel = config['weekly_channel']
-                embed = discord.Embed(title=f"{config['daily_title'][serverid]} [past day]", color=0x00FF00)
+                dailychannel = config['daily_channel']
+                daily_title = None
+                if serverid in config['daily_title']:
+                    daily_title = config['daily_title'][serverid]
+                embed = discord.Embed(title=f"{daily_title} [past day]", color=0x00FF00)
                 for p in myplayers:
                     if leaderboardspot == 1:
                         if myplayers[p]['bmid'] > 0:
